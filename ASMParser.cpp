@@ -235,7 +235,7 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
   if(operand_count != opcodes.numOperands(o))
     return false;
 
-  long rs, rt, rd, imm;
+  int rs, rt, rd, imm;
   imm = 0;
   rs = rt = rd = NumRegisters;
 
@@ -268,17 +268,17 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
     if(isNumberString(operand[imm_p])){  // does it have a numeric immediate field?
       imm = cvtNumString2Number(operand[imm_p]);
       if(((abs(imm) & 0xFFFF0000)<<1))  // too big a number to fit
-	      return false;
-    }
-    else if(isNumberHex(operand[imm_p])){
+	return false;
+    }else if(isNumberHex(operand[imm_p])){
       imm = stol(operand[imm_p], nullptr, 16);
     }
     else{
       if(opcodes.isIMMLabel(o)){  // Can the operand be a label?
-	      // Assign the immediate field an address
-        imm = labelHolder[operand[imm_p]];
-      }else  // There is an error
-	      return false;
+	// Assign the immediate field an address
+imm = labelHolder[operand[imm_p]];
+      }
+      else  // There is an error
+	return false;
     }
 
   }
